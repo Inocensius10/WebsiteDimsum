@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dimsome Mentai - Tambah Produk Baru</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" xintegrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="gambar/logo.png" type="image/png">
+    <style>
+        html {
+            height: 100%;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .main-content {
+            flex-grow: 1;
+        }
+        footer {
+            margin-top: auto;
+        }
+        .toast-container {
+            z-index: 1090;
+        }
+        #submitSpinner, #imageUploadSpinner {
+            display: none;
+        }
+        .navbar-brand img {
+            max-height: 40px;
+            width: auto;
+        }
+        #imagePreview {
+            max-width: 200px;
+            max-height: 200px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            padding: 5px;
+            display: none; /* Sembunyikan awalnya */
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="gambar/logo.png" alt="Dimsome Mentai Logo" class="d-inline-block align-top">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Beranda</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="produk.html">Produk</a>
+                    </li>
+                    <li class="nav-item" id="nav-tambah-produk" style="display: none;">
+                        <a class="nav-link active" aria-current="page" href="tambah-produk.html">Tambah Produk</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="tentang-kami.html">Tentang Kami</a>
+                    </li>
+                    <li class="nav-item" id="nav-login-admin">
+                        <a class="nav-link" href="login.html">Login Admin</a>
+                    </li>
+                    <li class="nav-item" id="nav-logout-admin" style="display: none;">
+                        <a class="nav-link" href="#" onclick="logoutAdmin()">Logout Admin</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content py-5">
+        <div class="container container-form">
+            <h2 class="text-center mb-5 fw-bold section-title">Tambah Produk Baru (Admin)</h2>
+
+            <form id="addProductForm">
+                <div class="mb-3">
+                    <label for="productName" class="form-label">Nama Produk</label>
+                    <input type="text" class="form-control" id="productName" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="productDescription" class="form-label">Deskripsi Produk</label>
+                    <textarea class="form-control" id="productDescription" rows="4" required></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label for="productPrice" class="form-label">Harga (Rp)</label>
+                    <input type="number" class="form-control" id="productPrice" required min="0">
+                </div>
+
+                <div class="mb-3">
+                    <label for="productImage" class="form-label">Gambar Produk</label>
+                    <input type="file" class="form-control" id="productImage" accept="image/*">
+                    <img id="imagePreview" src="#" alt="Pratinjau Gambar" />
+                    <div class="spinner-border spinner-border-sm text-primary mt-2" role="status" id="imageUploadSpinner">
+                        <span class="visually-hidden">Mengunggah...</span>
+                    </div>
+                    <small id="imageUploadStatus" class="form-text text-muted"></small>
+                </div>
+                
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary-custom btn-lg" id="addProductSubmitButton" disabled>
+                        Tambah Produk
+                        <div class="spinner-border spinner-border-sm ms-2" role="status" id="submitSpinner">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer class="py-4 text-white">
+        <div class="container text-center">
+            <p>&copy; <span id="current-year"></span> Dimsome Mentai. Semua Hak Dilindungi.</p>
+            <p>Dibuat dengan <i class="fas fa-heart text-danger"></i> dan sedikit saus mentai.</p>
+            <div id="firebase-user-info" class="mt-2">
+                <small>User ID (Firebase): <span id="user-id-display">Loading...</span></small><br>
+                <small>Status Admin: <span id="admin-status-display">Tidak Login</span></small>
+            </div>
+        </div>
+    </footer>
+
+    <div class="chat-popup" id="chatPopup">
+         <div class="chat-header">
+            <h5 class="mb-0">Chat dengan Kami!</h5>
+            <button type="button" class="btn-close btn-close-white" aria-label="Close" onclick="toggleChat()"></button>
+        </div>
+        <div class="chat-body">
+            <p>Ada yang bisa kami bantu? Tanyakan saja!</p>
+            <textarea class="form-control mb-2" rows="3" placeholder="Ketik pesan Anda..."></textarea>
+            <button class="btn btn-sm btn-primary-custom w-100">Kirim</button>
+        </div>
+    </div>
+    <button class="chat-toggle-btn" onclick="toggleChat()">
+        <i class="fas fa-comments"></i>
+    </button>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="notificationToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto" id="toastTitle">Notifikasi</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body" id="toastBody">
+                Pesan notifikasi.
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    
+    <script type="module">
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET", // Pastikan ini ada dan benar
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'dimsomentai-app';
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        // Impor Firebase Storage
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
+        import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const storage = getStorage(app); // Inisialisasi Storage
+        setLogLevel('debug');
+
+        let firebaseUserId = null;
+        const toastElement = document.getElementById('notificationToast');
+        const toast = new bootstrap.Toast(toastElement);
+        const addProductSubmitButton = document.getElementById('addProductSubmitButton');
+        const submitSpinner = document.getElementById('submitSpinner');
+        const imageUploadSpinner = document.getElementById('imageUploadSpinner');
+        const imageUploadStatus = document.getElementById('imageUploadStatus');
+        const productImageInput = document.getElementById('productImage');
+        const imagePreview = document.getElementById('imagePreview');
+
+        // Pratinjau Gambar
+        if (productImageInput && imagePreview) {
+            productImageInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        imagePreview.src = e.target.result;
+                        imagePreview.style.display = 'block';
+                    }
+                    reader.readAsDataURL(file);
+                    if(imageUploadStatus) imageUploadStatus.textContent = `File dipilih: ${file.name}`;
+                } else {
+                    imagePreview.style.display = 'none';
+                    imagePreview.src = '#';
+                    if(imageUploadStatus) imageUploadStatus.textContent = '';
+                }
+            });
+        }
+
+
+        function showNotification(title, message, type = 'success') {
+            const toastTitle = document.getElementById('toastTitle');
+            const toastBody = document.getElementById('toastBody');
+            
+            if (toastTitle) toastTitle.textContent = title;
+            if (toastBody) toastBody.textContent = message;
+
+            if (toastElement) {
+                toastElement.classList.remove('bg-success', 'bg-danger', 'bg-warning', 'text-white', 'text-dark');
+                if (type === 'success') {
+                    toastElement.classList.add('bg-success', 'text-white');
+                } else if (type === 'danger') {
+                    toastElement.classList.add('bg-danger', 'text-white');
+                } else if (type === 'warning') {
+                    toastElement.classList.add('bg-warning', 'text-dark');
+                }
+                toast.show();
+            }
+        }
+
+        async function addProductToFirestore(productData) {
+            if (submitSpinner) submitSpinner.style.display = 'inline-block';
+            if (addProductSubmitButton) addProductSubmitButton.disabled = true;
+
+            try {
+                if (!firebaseUserId) {
+                    throw new Error("Firebase User ID tidak ditemukan untuk menyimpan produk.");
+                }
+                const productsPath = `artifacts/${appId}/public/data/products`;
+                const productsCol = collection(db, productsPath);
+                
+                const dataToSave = {
+                    ...productData, 
+                    createdBy: firebaseUserId,
+                    createdAt: serverTimestamp() 
+                };
+
+                const docRef = await addDoc(productsCol, dataToSave);
+                console.log("Product added with ID: ", docRef.id);
+                showNotification('Sukses!', 'Produk berhasil ditambahkan.', 'success');
+                document.getElementById('addProductForm').reset();
+                if (imagePreview) {
+                    imagePreview.style.display = 'none';
+                    imagePreview.src = '#';
+                }
+                if (imageUploadStatus) imageUploadStatus.textContent = '';
+            } catch (error) {
+                console.error("Error adding product: ", error);
+                showNotification('Error Simpan', `Gagal menambahkan produk: ${error.message}`, 'danger');
+            } finally {
+                if (submitSpinner) submitSpinner.style.display = 'none';
+                if (addProductSubmitButton && isAdminLoggedIn() && firebaseUserId) {
+                     addProductSubmitButton.disabled = false;
+                } else {
+                    if (addProductSubmitButton) addProductSubmitButton.disabled = true;
+                }
+            }
+        }
+
+        document.getElementById('addProductForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            
+            if (!isAdminLoggedIn()) {
+                showNotification('Akses Ditolak', 'Anda harus login sebagai admin untuk menambah produk.', 'danger');
+                window.location.href = 'login.html';
+                return;
+            }
+            if (!firebaseUserId) { 
+                showNotification('Otentikasi Firebase Gagal', 'User ID Firebase tidak ditemukan. Coba muat ulang halaman.', 'danger');
+                if (addProductSubmitButton) addProductSubmitButton.disabled = true;
+                return;
+            }
+
+            const productName = document.getElementById('productName').value;
+            const productDescription = document.getElementById('productDescription').value;
+            const productPrice = parseFloat(document.getElementById('productPrice').value);
+            const imageFile = productImageInput.files[0];
+
+            if (!productName || !productDescription || isNaN(productPrice)) {
+                showNotification('Input Tidak Lengkap', 'Nama, deskripsi, dan harga produk wajib diisi.', 'warning');
+                return;
+            }
+
+            if (submitSpinner) submitSpinner.style.display = 'inline-block';
+            if (addProductSubmitButton) addProductSubmitButton.disabled = true;
+            if (imageUploadSpinner) imageUploadSpinner.style.display = 'none'; 
+            if (imageUploadStatus) imageUploadStatus.textContent = '';
+
+
+            let imageUrl = null;
+            if (imageFile) {
+                if (imageUploadSpinner) imageUploadSpinner.style.display = 'inline-block';
+                if (imageUploadStatus) imageUploadStatus.textContent = 'Mengunggah gambar...';
+                
+                const uniqueFileName = `${Date.now()}_${imageFile.name.replace(/\s+/g, '_')}`; // Ganti spasi dengan underscore
+                const storageRef = ref(storage, `product_images/${uniqueFileName}`);
+                
+                try {
+                    const uploadTask = uploadBytesResumable(storageRef, imageFile);
+
+                    await new Promise((resolve, reject) => {
+                        uploadTask.on('state_changed',
+                            (snapshot) => {
+                                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                                if (imageUploadStatus) imageUploadStatus.textContent = `Mengunggah: ${Math.round(progress)}%`;
+                            },
+                            (error) => {
+                                console.error("Upload error:", error);
+                                reject(error);
+                            },
+                            () => { 
+                                resolve();
+                            }
+                        );
+                    });
+                    
+                    imageUrl = await getDownloadURL(uploadTask.snapshot.ref);
+                    console.log('File available at', imageUrl);
+                    if (imageUploadStatus) imageUploadStatus.textContent = 'Gambar berhasil diunggah!';
+                } catch (error) {
+                    console.error("Upload failed:", error);
+                    showNotification('Upload Gagal', `Gagal mengunggah gambar: ${error.message}`, 'danger');
+                    if (imageUploadSpinner) imageUploadSpinner.style.display = 'none';
+                    if (imageUploadStatus) imageUploadStatus.textContent = `Gagal unggah: ${error.message}`;
+                    if (submitSpinner) submitSpinner.style.display = 'none';
+                    if (addProductSubmitButton && isAdminLoggedIn() && firebaseUserId) addProductSubmitButton.disabled = false;
+                    return;
+                } finally {
+                     if (imageUploadSpinner) imageUploadSpinner.style.display = 'none';
+                }
+            }
+
+            const productData = {
+                name: productName,
+                description: productDescription,
+                price: productPrice,
+                imageUrl: imageUrl 
+            };
+
+            await addProductToFirestore(productData);
+        });
+
+        let firebaseAuthAttempted = false; 
+        async function initializeFirebaseAuth() {
+            if (firebaseAuthAttempted) return;
+            firebaseAuthAttempted = true;
+
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                try {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                    return; 
+                } catch (error) {
+                    console.error("Error signing in with custom token (tambah-produk.html): ", error);
+                    if (!auth.currentUser) { /* Lanjutkan ke anonim */ } else { return; }
+                }
+            }
+            
+            if (!auth.currentUser) {
+                try {
+                    await signInAnonymously(auth);
+                } catch (error) {
+                    console.error("Error signing in anonymously (tambah-produk.html): ", error);
+                    showNotification('Otentikasi Firebase Gagal', 'Gagal otentikasi anonim Firebase.', 'danger');
+                    if (document.getElementById('user-id-display')) document.getElementById('user-id-display').textContent = "Gagal Otentikasi Firebase";
+                    if (addProductSubmitButton) addProductSubmitButton.disabled = true;
+                }
+            }
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            const userIdDisplay = document.getElementById('user-id-display');
+            if (user) {
+                firebaseUserId = user.uid; 
+                console.log("Firebase User is signed in with UID (tambah-produk.html):", firebaseUserId);
+                if (userIdDisplay) userIdDisplay.textContent = firebaseUserId;
+                if (addProductSubmitButton && isAdminLoggedIn()) {
+                    addProductSubmitButton.disabled = false;
+                } else if (addProductSubmitButton) {
+                    addProductSubmitButton.disabled = true;
+                }
+            } else {
+                firebaseUserId = null; 
+                console.log("Firebase User is signed out (tambah-produk.html).");
+                if (userIdDisplay) userIdDisplay.textContent = "Belum Masuk Firebase";
+                if (addProductSubmitButton) addProductSubmitButton.disabled = true; 
+                if (!firebaseAuthAttempted) {
+                    initializeFirebaseAuth();
+                }
+            }
+        });
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!isAdminLoggedIn()) {
+                window.location.href = 'login.html';
+                return; 
+            }
+            if (!auth.currentUser) {
+                initializeFirebaseAuth();
+            }
+            updateAdminNav(); 
+        });
+
+    </script>
+
+    <script>
+        function isAdminLoggedIn() {
+            return sessionStorage.getItem('adminLoggedIn') === 'true';
+        }
+
+        function updateAdminNav() {
+            const navTambahProduk = document.getElementById('nav-tambah-produk');
+            const navLoginAdmin = document.getElementById('nav-login-admin');
+            const navLogoutAdmin = document.getElementById('nav-logout-admin');
+            const adminStatusDisplay = document.getElementById('admin-status-display');
+
+            if (isAdminLoggedIn()) {
+                if (navTambahProduk) navTambahProduk.style.display = 'list-item';
+                if (navLoginAdmin) navLoginAdmin.style.display = 'none';
+                if (navLogoutAdmin) navLogoutAdmin.style.display = 'list-item';
+                if (adminStatusDisplay) adminStatusDisplay.textContent = 'Login sebagai Admin';
+            } else {
+                if (navTambahProduk) navTambahProduk.style.display = 'none';
+                if (navLoginAdmin) navLoginAdmin.style.display = 'list-item';
+                if (navLogoutAdmin) navLogoutAdmin.style.display = 'none';
+                if (adminStatusDisplay) adminStatusDisplay.textContent = 'Tidak Login';
+            }
+        }
+
+        function logoutAdmin() {
+            sessionStorage.removeItem('adminLoggedIn');
+            updateAdminNav();
+            window.location.href = 'index.html'; 
+        }
+        
+        if(document.getElementById('current-year')) {
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+        }
+
+        const chatPopup = document.getElementById('chatPopup');
+        function toggleChat() {
+            if (chatPopup) {
+                if (chatPopup.style.display === 'none' || chatPopup.style.display === '') {
+                    chatPopup.style.display = 'flex';
+                } else {
+                    chatPopup.style.display = 'none';
+                }
+            }
+        }
+        if (chatPopup) {
+            chatPopup.style.display = 'none';
+        }
+    </script>
+</body>
+</html>

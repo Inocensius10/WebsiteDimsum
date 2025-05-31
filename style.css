@@ -1,0 +1,345 @@
+/* Font Impor (Inter) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* Variabel Warna Utama */
+:root {
+    --dark-orange: #E65100; /* Oranye tua yang lebih pekat */
+    --medium-orange: #F57C00; /* Oranye sedang */
+    --light-orange: #FFF3E0; /* Oranye muda untuk background section */
+    --text-dark: #333333;
+    --text-light: #FFFFFF;
+    --border-color: #FFCC80; /* Warna border yang lebih muda */
+    --bs-primary: var(--medium-orange); /* Override Bootstrap primary color */
+    --bs-primary-rgb: 245, 124, 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    color: var(--text-dark);
+    line-height: 1.6;
+    background-color: #f8f9fa; /* Warna latar belakang umum yang netral */
+}
+
+/* Navbar Styling */
+.navbar {
+    background-color: var(--dark-orange);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    color: var(--text-light) !important;
+    font-size: 1.5rem; /* Sedikit lebih besar */
+}
+
+.navbar-nav .nav-link {
+    color: var(--text-light) !important;
+    padding: 0.8rem 1rem;
+    transition: color 0.3s ease;
+    font-weight: 500;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active {
+    color: var(--light-orange) !important; /* Warna hover yang lebih terang */
+}
+
+.navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+
+/* Hero Section Styling */
+.hero-section {
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://placehold.co/1920x600/E65100/333333?text=Dimsum+Lezat') no-repeat center center;
+    background-size: cover;
+    min-height: 60vh; /* Tinggi minimal untuk hero */
+    padding: 4rem 0;
+}
+
+.hero-section h1 {
+    font-size: 3rem; /* Ukuran font judul lebih besar */
+}
+
+.hero-section .lead {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+.hero-section .btn-light {
+    background-color: var(--text-light);
+    border-color: var(--text-light);
+    padding: 0.8rem 2rem;
+    font-size: 1.1rem;
+}
+.text-dark-orange {
+    color: var(--dark-orange) !important;
+}
+
+
+/* Section Title Styling */
+.section-title {
+    color: var(--dark-orange);
+    position: relative;
+    padding-bottom: 15px;
+    margin-bottom: 3rem !important; /* Menambah margin bawah */
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: var(--medium-orange);
+    bottom: 0;
+    left: calc(50% - 30px);
+}
+
+/* Product Card Styling */
+.product-card {
+    border: 1px solid var(--border-color);
+    border-radius: 10px; /* Sudut lebih bulat */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden; /* Mencegah gambar keluar dari border-radius */
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.product-card .card-img-top {
+    height: 200px;
+    object-fit: cover; /* Memastikan gambar terisi dengan baik */
+}
+
+.product-card .card-body {
+    padding: 1.25rem;
+}
+
+.product-card .card-title {
+    color: var(--dark-orange);
+    font-size: 1.2rem; /* Ukuran judul produk */
+}
+
+.product-card .price-tag {
+    color: var(--medium-orange);
+    font-size: 1.1rem;
+}
+
+/* Custom Button Styling */
+.btn-primary-custom {
+    background-color: var(--medium-orange);
+    border-color: var(--medium-orange);
+    color: var(--text-light);
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px; /* Sudut tombol lebih bulat */
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    font-weight: 600;
+}
+
+.btn-primary-custom:hover {
+    background-color: var(--dark-orange);
+    border-color: var(--dark-orange);
+    color: var(--text-light);
+}
+
+.btn-secondary-custom {
+    background-color: var(--light-orange);
+    border-color: var(--medium-orange);
+    color: var(--medium-orange);
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    font-weight: 600;
+}
+
+.btn-secondary-custom:hover {
+    background-color: var(--medium-orange);
+    border-color: var(--medium-orange);
+    color: var(--text-light);
+}
+
+
+/* Background Light Orange Section */
+.bg-light-orange {
+    background-color: var(--light-orange);
+}
+
+/* Footer Styling */
+footer {
+    background-color: var(--dark-orange);
+}
+
+footer p {
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+/* Chat Popup Styling */
+.chat-toggle-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--medium-orange);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-size: 1.8rem; /* Ukuran ikon lebih besar */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: background-color 0.3s ease;
+}
+
+.chat-toggle-btn:hover {
+    background-color: var(--dark-orange);
+}
+
+.chat-popup {
+    position: fixed;
+    bottom: 90px; /* Di atas tombol toggle */
+    right: 20px;
+    width: 320px; /* Lebar popup chat */
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    display: none; /* Default tersembunyi */
+    flex-direction: column;
+    z-index: 999;
+    overflow: hidden; /* Untuk border-radius di header */
+}
+
+.chat-header {
+    background-color: var(--medium-orange);
+    color: white;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.chat-header h5 {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.chat-body {
+    padding: 1rem;
+    max-height: 300px; /* Batas tinggi area chat */
+    overflow-y: auto; /* Scroll jika konten banyak */
+}
+
+.chat-body p {
+    font-size: 0.9rem;
+    color: var(--text-dark);
+}
+
+.chat-body textarea {
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+/* Form Input Styling */
+.form-control:focus {
+    border-color: var(--medium-orange);
+    box-shadow: 0 0 0 0.25rem rgba(245, 124, 0, 0.25); /* Warna shadow fokus oranye */
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--dark-orange);
+}
+
+/* Container Styling */
+.container-form {
+    max-width: 700px; /* Lebar maksimal untuk form */
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-section h1 {
+        font-size: 2.5rem;
+    }
+    .hero-section .lead {
+        font-size: 1.1rem;
+    }
+    .chat-popup {
+        width: calc(100% - 40px); /* Lebar penuh di mobile dengan sedikit margin */
+        bottom: 80px;
+    }
+}
+
+/* Placeholder styling (jika diperlukan lebih spesifik) */
+.placeholder-glow .placeholder {
+    background-color: #e9ecef; /* Warna placeholder default Bootstrap */
+}
+
+/* Styling untuk tombol Gemini */
+.btn-gemini {
+    background-color: #4285F4; /* Warna Google Blue */
+    border-color: #4285F4;
+    color: white;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.btn-gemini:hover {
+    background-color: #3578E5;
+    border-color: #3578E5;
+    color: white;
+}
+
+.btn-gemini .fa-solid {
+    margin-right: 8px;
+}
+
+.gemini-spinner {
+    width: 1.2rem;
+    height: 1.2rem;
+    margin-left: 8px;
+}
+
+/* Styling untuk hasil dari Gemini */
+.gemini-suggestions {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    font-size: 0.9em;
+}
+
+.gemini-suggestions ul {
+    padding-left: 20px;
+    margin-bottom: 0;
+}
+
+.gemini-suggestions li {
+    cursor: pointer;
+    padding: 5px 0;
+}
+
+.gemini-suggestions li:hover {
+    color: var(--medium-orange);
+}
+
+#geminiNameSuggestions, #geminiDescriptionOutput {
+    max-height: 150px;
+    overflow-y: auto;
+}
